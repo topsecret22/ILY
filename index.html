@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff85a2, #ffacc7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '🎉';
+            position: absolute;
+            font-size: 50px;
+            top: 20px;
+            left: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '🎈';
+            position: absolute;
+            font-size: 40px;
+            top: 10%;
+            right: 15%;
+            animation: balloon 4s ease-in-out infinite;
+        }
+
+        .envelope-container {
+            position: relative;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .envelope {
+            width: 320px;
+            height: 200px;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .envelope-body {
+            width: 100%;
+            height: 100%;
+            background: #f8f8f8;
+            border-radius: 8px;
+            position: relative;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border: 2px solid #e0e0e0;
+        }
+
+        .envelope-body::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 10%;
+            right: 10%;
+            height: 20px;
+            background: #ff69b4;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .envelope-body::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 4px;
+            background: repeating-linear-gradient(90deg, 
+                transparent 0px, 
+                transparent 4px, 
+                #ff69b4 4px,
+                #ff69b4 8px
+            );
+        }
+
+        .heart {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: #00bfff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: heartbeat 1.5s infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,191,255,0.3);
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: #00bfff;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            left: -35px;
+        }
+
+        .heart::after {
+            top: -35px;
+        }
+
+        .heart-letter {
+            position: relative;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .message {
+            position: absolute;
+            width: 280px;
+            height: 160px;
+            background: white;
+            padding: 25px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0) rotateX(180deg);
+            opacity: 0;
+            transition: all 0.8s ease;
+            border-radius: 10px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            text-align: center;
+            font-family: 'Arial';
+        }
+
+        .message.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1) rotateX(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ff69b4;
+            transition: transform 0.3s;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            animation: explode 2s ease-out forwards;
+            opacity: 0.9;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-25px); }
+        }
+
+        @keyframes balloon {
+            0%, 100% { transform: translateY(0) rotate(-10deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            15% { transform: translate(-50%, -50%) scale(1.25); }
+            30% { transform: translate(-50%, -50%) scale(1); }
+            45% { transform: translate(-50%, -50%) scale(1.15); }
+            60% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @keyframes explode {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) rotate(720deg); opacity: 0; }
+        }
+
+        .open .envelope-body {
+            transform: rotateX(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="envelope-container" onclick="openEnvelope(event)">
+        <div class="envelope">
+            <div class="envelope-body">
+                <div class="heart">
+                    <div class="heart-letter">R</div>
+                </div>
+            </div>
+        </div>
+        <div class="message" id="message">
+            <span class="close-btn" onclick="closeMessage(event)">×</span>
+            <h3>🎂 Happy Birthday! 🎉</h3>
+            <p>بستي القمر, كل عام وأنتِ بألف خير<br>
+           في كثير أشياء حاب أحكيها بس للأسف أنتِ عارفة إني ما بقدر أحكي كلشي<br>
+المهم فكك مني وانبسطي بحياتك, بس حبيت أعايد عليكِ لأنه ما قدرت أسكت للأمانة<br>
+😏🩵 أتوقع إني أول واحد ببعثلك.. أكيد هه</p>
+        </div>
+    </div>
+
+    <!-- عنصر الصوت -->
+    <audio id="birthdayMusic" loop>
+        <source src="birthday_music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        function playMusic() {
+            const music = document.getElementById('birthdayMusic');
+            music.volume = 0.3;
+            music.play().catch(error => {
+                console.log('انقر أولاً على الظرف للسماح بتشغيل الصوت');
+            });
+        }
+
+        function createConfetti() {
+            const colors = ['#ff69b4', '#00bfff', '#ffd700', '#7cfc00', '#ff4500'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.top = `${Math.random() * 100}%`;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                confetti.style.setProperty('--tx', `${Math.random() * 800 - 400}px`);
+                confetti.style.setProperty('--ty', `${Math.random() * 800 - 400}px`);
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 2000);
+            }
+        }
+
+        function openEnvelope(event) {
+            if(event.target.closest('.message')) return;
+            
+            const container = document.querySelector('.envelope-container');
+            const message = document.getElementById('message');
+            
+            container.classList.add('open');
+            message.classList.add('show');
+            container.style.animation = 'none';
+            
+            createConfetti();
+            playMusic();
+        }
+
+        function closeMessage(event) {
+            event.stopPropagation();
+            const container = document.querySelector('.envelope-container');
+            const message = document.getElementById('message');
+            
+            container.classList.remove('open');
+            message.classList.remove('show');
+            container.style.animation = 'float 2s ease-in-out infinite';
+        }
+    </script>
+</body>
+</html>
